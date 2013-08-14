@@ -59,17 +59,31 @@ function imageRatio(image) {
     return "horizontal";
   }
 }     
-           
-(function (document) {
-  
+
+var goslingify = function goslingify(){
+ 
   getGosling.init(myGosling);
   var images = document.getElementsByTagName('img'), length = images.length
  
   for (var i = 0; i < length; i++) {
-    var ratio = imageRatio(images[i]);
-    var number = Randomize(getGosling[ratio]());
-    var img = getGosling[ratio]()[number];
-    images[i].src = img.imageurl
+    if(images[i].src && images[i].src.search('heygirl.io') === -1){
+      var ratio = imageRatio(images[i]);
+      var number = Randomize(getGosling[ratio]());
+      var img = getGosling[ratio]()[number];
+      images[i].src = img.imageurl
+    }
   }
+}
+           
+$(document).ready(function(){
 
-})(document);
+  $(window).scroll(function(){
+    clearTimeout($.data(this, 'scrollTimer'));
+    $.data(this, 'scrollTimer', setTimeout(function() {
+        goslingify();
+    }, 250));
+  });
+
+  goslingify();
+
+});
